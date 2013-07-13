@@ -9,12 +9,12 @@ miss_perc = (ARGV[2])
 @phone_number = []
 
 N.times do
-	if lang == "en"	 
+  if lang == "en"	 
       @name << "#{Faker::Name.name}" 
       @address <<   "#{Faker::Address.city} #{Faker::Address.street_address} #{Random.rand(40)+1}"
       @phone_number << "#{Faker::PhoneNumber.phone_number}"
-    elsif lang == "ru"
-      @name << Faker::NameRU.name 
+  elsif lang == "ru"
+      @name << "{Faker::NameRU.name}" 
       @address <<  "#{Faker::Address.city} #{Faker::Address.street_address} #{Random.rand(40)+1}"
       @phone_number << Faker::PhoneNumber.phone_number
   end
