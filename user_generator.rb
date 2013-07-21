@@ -5,7 +5,7 @@ require 'ryba'
 
 lang = (ARGV[0])
 N = (ARGV[1]).to_i
-miss_perc = (ARGV[2])
+miss_perc = (ARGV[2]).to_f
 
 def gen_us
   name = Faker::Name.name
@@ -60,8 +60,18 @@ def by_city(zip)
   end
 end
 
-N.times do
+(N*miss_perc).to_i.times do
 	if lang == "US"
+      p "Fuck " + gen_us
+    elsif lang == "RU"
+      p "Пшёл на ... " + gen_ru
+    elsif lang == "BY"
+      p "Пшёл на ... " + gen_by 
+  end
+end
+
+(N-N*miss_perc).to_i.times do
+  if lang == "US"
       p gen_us
     elsif lang == "RU"
       p gen_ru
