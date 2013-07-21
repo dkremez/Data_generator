@@ -15,14 +15,7 @@ When /^the test_data_generator is run$/ do
   raise('Command Faild!') unless $?.success?
 end
 
-Then /^output name should be "([^'']*)"$/ do |expected_name|
-  @name.should == expected_name
+Then /^output length should be "([^'']*)"$/ do |expected_lenght|
+	@name.lenght == expected_lenght.to_i
 end
 
-Then /^adress: "([^'']*)"$/ do |expected_address|
-  @address.should == expected_adress
-end
-
-Then /^telephone: "([^'']*)"$/ do |expected_phone_number|
-  @phone_number.should == expected_phone_number
-end

@@ -5,12 +5,11 @@ Feature: Generate valid first, last name; adress; telephone
 		And input "<number>"
 		And "<misstake_percentage>"
 		When the test_data_generator is run
-		Then output name should be "<name>"
-		And adress: "<address>"
-		And  telephone: "<phone_number>"
+		Then output length should be "<length>"
+		
 
 	Examples:
-		| language | number | misstake_percentage | name           | address  | phone_number |
-		| en       | 1      | 0                   | "Jone Smith"   |"Smith"   |   "Smith"    |
-		| ru       | 1      | 1                   | "Иванов Иван"  | address  | phone_number |
+		| language | number | misstake_percentage | length           | 
+		| en       | 2      | 0                   | 2                |
+		| ru       | 1      | 1                   | 1                |
 
