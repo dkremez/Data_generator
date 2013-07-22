@@ -3,90 +3,74 @@ require 'ffaker'
 require 'ryba'
 
 
-lang = (ARGV[0])
+lang = (ARGV[0]).upcase
 N = (ARGV[1]).to_i
 miss_perc = (ARGV[2]).to_f
+MAX_NUMBER = 9999999
 
-def gen_us
+def generate_us_data
   name = Faker::Name.name
-  address = "#{Faker::AddressUS.zip_code}, #{Faker::AddressUS.state}, #{Faker::Address.city} #{Faker::Address.street_address} h.#{Random.rand(40)+1}"
-  phone_number = Faker::PhoneNumber.phone_number
+  address = "#{Faker::Address.city} #{Faker::Address.street_address} h.#{Random.rand(40)+1}, #{Faker::AddressUS.state}, #{Faker::AddressUS.zip_code} USA"
+  phone_number = Faker::PhoneNumber.phone_number.gsub(' ','-')
   "#{name}; #{address}; #{phone_number}."    
 end
 
-def gen_ru
+def generate_ru_data
   name = Ryba::Name.full_name
   address = Ryba::Address.postal
-  phone_number = Ryba::PhoneNumber.phone_number
+  phone_number = Ryba::PhoneNumber.phone_number.gsub(' ','-')
   "#{name}; #{address}; #{phone_number}."     
 end
 
-def gen_by
+def generate_by_data
   name = Ryba::Name.full_name
   address = by_postal
-  phone_number = by_phone_number
+  phone_number = by_phone_number.gsub(' ','-')
   "#{name}; #{address}; #{phone_number}."     
 end
 
 def index
-  [220000,224000,210000,246000,230000,212000].sample
+  [220000,224000,210000,246000,230000,212000,220017,220136,220019].sample
 end
 
 def by_phone_number
-  "+375 #{[29,33,44,25].sample} #{(0000000..9999999).to_a.sample}"
+  "+375 #{[29,33,44,25].sample} #{"%09d" % rand(MAX_NUMBER)}"
 end
 def by_city_by_zip(zip)
-  by_city = {220000 => 'Минск', 210000 => 'Витебск', 246000 => "Гомель", 230000 =>"Гродно", 212000 =>"Могилев", 224000 => "Брест"}
+  by_city = {220000 => 'Минск', 210000 => 'Витебск', 246000 => "Гомель", 230000 =>"Гродно",
+   212000 =>"Могилев", 224000 => "Брест", 220017 => "Минск", 220136 => 'Минск', 220019 => 'Минск'}
   by_city[zip]
 end
-
-
   
 def by_postal
   zip = index
-  "#{zip}, #{by_city_by_zip(zip)}, #{Ryba::Address.address}"
+  "#{Ryba::Address.address}, г. #{by_city_by_zip(zip)}, #{zip}"
 end
 
-
-
-# def by_city(zip) 
-#   case zip
-#       when 220000
-#         'Минск'
-#       when 210000
-#         'Витебск'
-#       when 246000
-#         'Гомель'
-#       when 230000
-#         'Гродно'
-#       when 212000
-#         'Могилев'
-#       when 224000
-#         'Брест'
-#       else
-#         'Минск'
-#   end
-# end
+def make_wrong(data_string)
+  good_data = Random.rand(10).to_s
+  wrong_data = Random.rand(500).to_s
+  data_string.gsub(good_data, wrong_data) 
+end
 
 (N*miss_perc).to_i.times do
-  it_was = Random.rand(10).to_s
-  it_will_be = Random.rand(500).to_s
+  
 	if lang == "US"
-      p gen_us.gsub(it_was, it_will_be) 
+      p make_wrong generate_us_data 
     elsif lang == "RU"
-      p gen_ru.gsub(it_was, it_will_be) 
+      p make_wrong generate_ru_data 
     elsif lang == "BY"
-      p gen_by.gsub(it_was, it_will_be) 
+      p make_wrong generate_by_data
   end
 end
 
 (N-N*miss_perc).to_i.times do
   if lang == "US"
-      p gen_us
+      p generate_us_data
     elsif lang == "RU"
-      p gen_ru
+      p generate_ru_data
     elsif lang == "BY"
-      p gen_by 
+      p generate_by_data 
   end
 end
 
