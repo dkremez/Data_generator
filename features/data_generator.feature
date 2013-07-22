@@ -5,7 +5,7 @@ Feature: Generate valid first, last name; adress; telephone
 		And input "<number>"
 		And "<misstake_percentage>"
 		When the test_data_generator is run
-		Then output length should be "<length>"
+		Then output lSength should be "<length>"
 		
 
 	Examples:

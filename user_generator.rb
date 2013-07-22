@@ -27,11 +27,6 @@ def gen_by
   phone_number = by_phone_number
   "#{name}; #{address}; #{phone_number}."     
 end
-  
-def by_postal
-  zip = index
-  "#{zip}, #{by_city(zip)}, #{Ryba::Address.address}"
-end
 
 def index
   [220000,224000,210000,246000,230000,212000].sample
@@ -40,33 +35,48 @@ end
 def by_phone_number
   "+375 #{[29,33,44,25].sample} #{(0000000..9999999).to_a.sample}"
 end
-
-def by_city(zip) 
-  case zip
-      when 220000
-        'Минск'
-      when 210000
-        'Витебск'
-      when 246000
-        'Гомель'
-      when 230000
-        'Гродно'
-      when 212000
-        'Могилев'
-      when 224000
-        'Брест'
-      else
-        'Минск'
-  end
+def by_city_by_zip(zip)
+  by_city = {220000 => 'Минск', 210000 => 'Витебск', 246000 => "Гомель", 230000 =>"Гродно", 212000 =>"Могилев", 224000 => "Брест"}
+  by_city[zip]
 end
 
+
+  
+def by_postal
+  zip = index
+  "#{zip}, #{by_city_by_zip(zip)}, #{Ryba::Address.address}"
+end
+
+
+
+# def by_city(zip) 
+#   case zip
+#       when 220000
+#         'Минск'
+#       when 210000
+#         'Витебск'
+#       when 246000
+#         'Гомель'
+#       when 230000
+#         'Гродно'
+#       when 212000
+#         'Могилев'
+#       when 224000
+#         'Брест'
+#       else
+#         'Минск'
+#   end
+# end
+
 (N*miss_perc).to_i.times do
+  it_was = Random.rand(10).to_s
+  it_will_be = Random.rand(500).to_s
 	if lang == "US"
-      p "Fuck " + gen_us
+      p gen_us.gsub(it_was, it_will_be) 
     elsif lang == "RU"
-      p "Пшёл на ... " + gen_ru
+      p gen_ru.gsub(it_was, it_will_be) 
     elsif lang == "BY"
-      p "Пшёл на ... " + gen_by 
+      p gen_by.gsub(it_was, it_will_be) 
   end
 end
 

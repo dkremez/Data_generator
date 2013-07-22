@@ -8,7 +8,7 @@ end
 
 Given /^"([^'']*)"$/ do |misstake_percentage|
  @misstake_percentage = misstake_percentage
-end
+endS
 
 When /^the test_data_generator is run$/ do
   `ruby test_data_generator.rb #{@language} #{@number} #{@misstake_percentage}`
