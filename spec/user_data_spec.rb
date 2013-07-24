@@ -13,17 +13,17 @@ describe UserData do
 
     it "generate us  user data " do
       user = UserData::DataGenetaror.new('us', '1', '0')
-      expect(user.generate_us_data).to match(/^(.*;.*;.*)$/)
+      expect(user.generate_us_data).to match(/^(.+;.+;.+)$/)
     end
 
     it "generate ru user data" do
       user = UserData::DataGenetaror.new('ru', '1', '0')
-      expect(user.generate_ru_data).to match(/^(.*;.*;.*)$/)
+      expect(user.generate_ru_data).to match(/^(.+;.+;.+)$/)
     end
 
     it "generate by user data" do
       user = UserData::DataGenetaror.new('by', '1', '0')
-      expect(user.generate_by_data).to match(/^(.*;.*;.*)$/)
+      expect(user.generate_by_data).to match(/^(.+;.+;.+)$/)
     end
 
   end
@@ -35,7 +35,7 @@ describe UserData do
 
   it "return Belarussian postal data" do
     user = UserData::DataGenetaror.new('by', '1', '0')
-    expect(user.by_postal).to match(/^(.*,.*,.*)$/)
+    expect(user.by_postal).to match(/^(.+,.+,.+)$/)
   end
 
   it "return Belarussian phone number" do
@@ -46,6 +46,11 @@ describe UserData do
   it "give Minsk city by zipcode" do
     user = UserData::DataGenetaror.new('by', '1', '0')
     user.by_city_by_zip(220000).should eq('Минск')
+  end
+
+  it "should make string wrong " do
+    user = UserData::DataGenetaror.new('by', '1', '0')
+    user.make_wrong("123456789").should_not eq("123456789")
   end
  
 

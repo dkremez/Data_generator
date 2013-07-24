@@ -64,15 +64,14 @@ t = MyModule::Registrator.new
 logins = []
 
 puts 'Put number of users'
-numberOfUsers = gets
+numberOfUsers = gets.chomp
 
-i=0
-while i < numberOfUsers.to_i
+
+numberOfUsers.to_i.times do
   t.generate_nick
   t.name_data
   t.rulesAgree
   t.formFilling  
   logins = logins + [t.login + ' ' + t.password]
-  i+=1
 end
 puts logins

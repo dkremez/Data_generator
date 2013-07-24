@@ -16,7 +16,11 @@ module UserData
     def main 
       @N.times do
         users_data = {'US' => generate_us_data, 'RU' => generate_ru_data, 'BY' => generate_by_data}
-        puts make_wrong(@error_percent, users_data[@locale])
+        if rand < @error_percent
+          puts make_wrong(users_data[@locale])
+        else
+          puts users_data[@locale]
+        end
       end
 
     end
@@ -61,14 +65,10 @@ module UserData
       "#{Ryba::Address.address}, г. #{by_city_by_zip(zip)}, #{zip}"
     end
 
-    def make_wrong(error_percent, data_string)
+    def make_wrong(data_string)
       good_data = Random.rand(10).to_s
       wrong_data = Random.rand(500).to_s
-      if rand <= error_percent
-        data_string.gsub(good_data, wrong_data) 
-      else
-        data_string
-      end
+      data_string.gsub(good_data, wrong_data) 
     end
   end
 end
