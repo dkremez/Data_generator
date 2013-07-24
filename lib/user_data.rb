@@ -14,9 +14,10 @@ module UserData
     end
 
     def main 
+      users_data = {'US' => generate_us_data, 'RU' => generate_ru_data, 'BY' => generate_by_dat }
+
       @N.times do
-        users_data = {'US' => generate_us_data, 'RU' => generate_ru_data, 'BY' => generate_by_data}
-        puts make_wrong(@error_percent, users_data[@locale])
+        puts make_wrong (@error_percent, users_data[@locale])
       end
 
     end
@@ -64,11 +65,7 @@ module UserData
     def make_wrong(error_percent, data_string)
       good_data = Random.rand(10).to_s
       wrong_data = Random.rand(500).to_s
-      if rand <= error_percent
-        data_string.gsub(good_data, wrong_data) 
-      else
-        data_string
-      end
+      data_string.gsub(good_data, wrong_data) if rand <= error_percent
     end
   end
 end
