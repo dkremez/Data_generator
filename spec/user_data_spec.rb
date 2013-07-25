@@ -9,6 +9,26 @@ describe UserData do
     UserData::DataGenetaror.new('us', '1', '0')
   end 
 
+  it "locale should be rigth" do
+    user = UserData::DataGenetaror.new('by', '1', '0')
+    user.locale.should eq('BY')
+  end
+
+  it "locale should be rigth" do
+    user = UserData::DataGenetaror.new('by', '1', '0')
+    user.locale.should eq('BY')
+  end
+
+  it "number should be rigth" do
+    user = UserData::DataGenetaror.new('by', '200', '0')
+    user.N.should eq(200)
+  end
+
+  it "error procent should be rigth" do
+    user = UserData::DataGenetaror.new('by', '1', '0.8')
+    user.error_percent  .should eq(0.8)
+  end
+
   describe "#generate_##_data" do
 
     it "generate us  user data " do
@@ -52,6 +72,25 @@ describe UserData do
     user = UserData::DataGenetaror.new('by', '1', '0')
     user.make_wrong("123456789").should_not eq("123456789")
   end
- 
 
+  it "should puts to console BY data" do
+    user = UserData::DataGenetaror.new('by', '1', '0')
+    user.main
+  end
+
+  it "should puts to console Ru data" do
+    user = UserData::DataGenetaror.new('ru', '1', '0')
+    user.main
+  end
+
+  it "should puts to console US data" do
+    user = UserData::DataGenetaror.new('us', '1', '0')
+    user.main
+  end
+ 
+  it "shouldn't puts to console" do
+    user = UserData::DataGenetaror.new('sds', '1', '0')
+    user.main
+  end
+ 
 end

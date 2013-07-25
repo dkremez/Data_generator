@@ -13,37 +13,38 @@ module UserData
       @error_percent = error_percent.to_f
     end
 
+    attr_accessor :locale, :N, :error_percent
+
     def main 
       @N.times do
         users_data = {'US' => generate_us_data, 'RU' => generate_ru_data, 'BY' => generate_by_data}
-        if rand < @error_percent
+        if rand <= @error_percent
           puts make_wrong(users_data[@locale])
         else
           puts users_data[@locale]
         end
       end
-
     end
 
     def generate_us_data
       name = Faker::Name.name
       address = "#{Faker::Address.city} #{Faker::Address.street_address} h.#{Random.rand(40)+1}, #{Faker::AddressUS.state}, #{Faker::AddressUS.zip_code} USA"
       phone_number = Faker::PhoneNumber.phone_number.gsub(' ','-')
-      "#{name}; #{address}; #{phone_number}."    
+      "#{name}; #{address}; +#{phone_number}"    
     end
 
     def generate_ru_data
       name = Ryba::Name.full_name
       address = Ryba::Address.postal
       phone_number = Ryba::PhoneNumber.phone_number.gsub(' ','-')
-      "#{name}; #{address}; #{phone_number}."     
+      "#{name}; #{address}, Россия; #{phone_number}"     
     end
 
     def generate_by_data
       name = Ryba::Name.full_name
       address = by_postal
       phone_number = by_phone_number.gsub(' ','-')
-      "#{name}; #{address}; #{phone_number}"     
+      "#{name}; #{address}, Беларусь; #{phone_number}"     
     end
 
     def index

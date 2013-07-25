@@ -1,9 +1,11 @@
  # coding: utf-8
+require 'RMagick'
 require 'rubygems'
 require 'capybara' 
 require 'capybara/dsl'
 require 'ffaker'
 require 'ryba' 
+
 
 
 Capybara.current_driver = :selenium
@@ -33,6 +35,8 @@ module MyModule
     
       Capybara.fill_in('Username', :with => @login)
       Capybara.click_on('Проверить')
+      Capybara.page.save_screenshot('screenshot.png')
+      unlock_capcha
       random_password(size = 8)
       Capybara.fill_in('Password1', :with => @password)
       Capybara.fill_in('Password2', :with => @password)
@@ -51,6 +55,16 @@ module MyModule
     end
     def generate_nick
       @login = Faker::Name.name.split(' ').join
+    end
+
+    def save_only_capca
+      screen = Magick::Image.read('screenshot.png').first
+      capcha = screen.crop!(610, 1150, 280, 80)
+      capcha.write 'capcha.jpg'
+    end
+
+    def unlock_capcha
+      save_only_capca
     end
 
     def put_capcha
