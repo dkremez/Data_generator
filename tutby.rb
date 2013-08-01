@@ -1,14 +1,16 @@
  # coding: utf-8
 require 'RMagick'
-require 'rubygems'
 require 'capybara' 
 require 'capybara/dsl'
+require 'capybara-webkit'
 require 'ffaker'
-require 'ryba' 
+require 'ryba'
+require 'net/http'
+require 'net/http/post/multipart'
 
 
 
-Capybara.current_driver = :selenium
+Capybara.current_driver = :webkit
 Capybara.app_host = 'http://profile.tut.by/' 
 module MyModule
 
@@ -47,7 +49,7 @@ module MyModule
       Capybara.fill_in('_3_3', :with => '1992')
       
       Capybara.select('Мужчина', :from => '_4')
-      put_capcha
+      @capcha = put_capcha
       Capybara.fill_in('ap_word' , :with => @capcha )
       Capybara.click_on('reg_btn')
       Capybara.visit('http://profile.tut.by/change.html')
@@ -59,7 +61,7 @@ module MyModule
 
     def save_only_capca
       screen = Magick::Image.read('screenshot.png').first
-      capcha = screen.crop!(610, 1150, 280, 80)
+      capcha = screen.crop!(480, 1200, 280, 80)
       capcha.write 'capcha.jpg'
     end
 
@@ -68,9 +70,85 @@ module MyModule
     end
 
     def put_capcha
-      puts 'enter the captcha'
-      @capcha = gets.chomp
+      key = 'dbdfd415fbf7f460448e74ab948c1b1b'
+
+      capcha = 'capcha.jpg'
+      recognition_time = 10
+
+      #recognize capcha
+      id = send_captcha( key, capcha )
+      sleep( recognition_time )
+      code = nil
+      while code == nil do
+        code = get_captcha_text( key, id )
+        sleep 1
+      end#while
+      puts code
+      code.to_s
     end  
+
+    def send_captcha( key, captcha_file )
+      uri = URI.parse( 'http://antigate.com/in.php' )
+      file = File.new( captcha_file, 'rb' )
+      req = Net::HTTP::Post::Multipart.new( uri.path,
+                                            :method => 'post',
+                                            :key => key,
+                                            :file => UploadIO.new( file, 'image/jpeg', 'image.jpg' ),
+                                            :is_russian => 1 )
+      http = Net::HTTP.new( uri.host, uri.port )
+      begin
+        resp = http.request( req )
+      rescue => err
+        puts err
+        return nil
+      end#begin
+      
+      id = resp.body
+      return id[ 3..id.size ]
+    end#def
+
+    def get_captcha_text( key, id )
+      data = { :key => key,
+               :action => 'get',
+               :id => id,
+               :min_len => 5,
+               :max_len => 5 }
+      uri = URI.parse('http://antigate.com/res.php' )
+      req = Net::HTTP::Post.new( uri.path )
+      http = Net::HTTP.new( uri.host, uri.port )
+      req.set_form_data( data )
+
+      begin
+        resp = http.request(req)
+      rescue => err
+        puts err
+        return nil
+      end
+      
+      text = resp.body
+      if text != "CAPCHA_NOT_READY"
+        return text[ 3..text.size ]
+      end#if
+      return nil
+    end#def
+
+    def report_bad( key, id )
+      data = { :key => key,
+               :action => 'reportbad',
+               :id => id }
+      uri = URI.parse('http://antigate.com/res.php' )
+      req = Net::HTTP::Post.new( uri.path )
+      http = Net::HTTP.new( uri.host, uri.port )
+      req.set_form_data( data )
+
+      begin
+        resp = http.request(req)
+      rescue => err
+        puts err
+      end
+    end#def
+
+    
     
   end
 end
